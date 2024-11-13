@@ -9,7 +9,7 @@ const Layout = ({children}: LayoutProps) => {
   return (
     <div className=' max-w-7xl mx-auto'>
         <NavBar />
-        <div  className=' bg-red-300'>
+        <div>
             {children}
         </div>
     </div>

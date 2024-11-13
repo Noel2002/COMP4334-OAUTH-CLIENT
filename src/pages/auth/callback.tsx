@@ -1,7 +1,11 @@
+import { AuthContext } from '@/context/AuthContext';
+import { useRouter } from 'next/router';
 import React, { useEffect } from 'react'
 
 const Callback = () => {
     const [fragment, setFragment] = React.useState('');
+    const router = useRouter();
+    const context = React.useContext(AuthContext);
     useEffect(() => {
         console.log({hash: window.location.hash});
         
@@ -14,11 +18,17 @@ const Callback = () => {
     console.log({fragment});
     
     const params = new URLSearchParams(fragment);
-    console.log(params.get('access_token'));
+    const token = params.get('access_token');
+    if(token){
+      const isAuthenticated = context?.authenticate(token);
+      if(isAuthenticated){
+        router.push('/');
+      }
+    }
     
     
   return (
-    <div>{params.get('access_token')}</div>
+    <div>Redirecting to content . . .</div>
   )
 }
 

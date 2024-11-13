@@ -1,24 +1,17 @@
 import { AuthContext } from '@/context/AuthContext';
-import Link from 'next/link';
 import React from 'react';
 import { Button } from '../ui/button';
 
 const NavBar = () => {
-    const context = React.useContext(AuthContext);
-    const handleLogin = () => {
-
-    }
-    const handleLogout = ()=>{
-
-    }
+  const context = React.useContext(AuthContext);
   return (
     <nav className=' flex justify-between py-4 items-center'>
         <div>BLOG.</div>
         <>
             {
                 !context?.isAuthenticated ? 
-                <Button onClick={handleLogin} className=' rounded-md'>Login</Button> :
-                <button onClick={handleLogin}>Logout</button>
+                <Button onClick={context?.login} className=' rounded-md'>Sign in</Button> :
+                <button onClick={context.logout}>Logout</button>
 
             }
         </>

@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React, { createContext, useEffect } from "react";
 import crypto from 'crypto';
+import * as jose from 'jose';
 
 export type AuthContextType = {
   isAuthenticated: boolean;
@@ -8,12 +9,15 @@ export type AuthContextType = {
   token: string | null;
   login: () => void;
   logout: () => void;
-  authenticate: (token: string) => boolean;
+  authenticate: (token: string) => Promise<boolean>;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-const AuthProvider = ({children}: {children: React.ReactNode}) => {
+type AuthProviderProps = {
+    children: React.ReactNode;
+}
+const AuthProvider = (props: AuthProviderProps) => {
     const [isAuthenticated, setIsAuthenticated] = React.useState(false);
     const [username, setUserName] = React.useState<string | null>(null);
     const [token, setToken] = React.useState<string | null>(null);
@@ -36,8 +40,9 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
         localStorage.removeItem('access_token');
     }
 
-    const authenticate = (token: string) => {
+    const authenticate = async(token: string) => {
         if(!token) return false;
+
         localStorage.setItem('access_token', token);
         setToken(token);
         setIsAuthenticated(true);
@@ -53,7 +58,7 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
     }, [])
     return (
         <AuthContext.Provider value={{login, logout, isAuthenticated, username, token, authenticate}}>
-            {children}
+            {props.children}
         </AuthContext.Provider>
     )
 }

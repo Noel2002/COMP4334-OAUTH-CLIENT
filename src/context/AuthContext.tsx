@@ -28,7 +28,7 @@ const AuthProvider = (props: AuthProviderProps) => {
         const state = crypto.randomBytes(16).toString('hex');
         const redirect_uri = `http://localhost:80/auth/callback`;
         const client_id = process.env.NEXT_PUBLIC_CLIENT_ID;
-        const scope = "read";
+        const scope = "profile";
         const url = `/api/oauth/authorize?response_type=token&client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}&state=${state}`;
         router.push(url);
     }

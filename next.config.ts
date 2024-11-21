@@ -10,7 +10,15 @@ const nextConfig: NextConfig = {
         source: '/api/oauth/authorize',
         destination: uri,
         permanent: true,
-      },
+      },{
+        source: '/api/oauth/token',
+        destination: process.env.NEXT_PUBLIC_OAUTH_TOKEN_URI || 'http://localhost:3000/api/oauth/token',
+        permanent: true,
+        // headers: {
+        //   'Access-Control-Allow-Origin': '*',
+        //   "Access-Control-Allow-Methods": "PUT, POST, PATCH, DELETE, GET"
+        // }
+      }
     ]
   }
 };

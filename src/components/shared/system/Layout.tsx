@@ -6,12 +6,12 @@ type LayoutProps = {
 }
 const Layout = ({children}: LayoutProps) => {
   return (
-    <div className=' max-w-7xl mx-auto'>
-        <NavBar />
+    // <div className=' max-w-7xl mx-auto'>
+    //     <NavBar />
         <div>
             {children}
         </div>
-    </div>
+    // </div>
   )
 }
 

@@ -11,9 +11,9 @@ const Callback = () => {
     const state = params.get('state');
     if(code && state){
       const isAuthenticated = context?.authenticate(code, state);
-      if(isAuthenticated){
-        router.push('/');
-      }
+      // if(isAuthenticated){
+      //   router.push('/');
+      // }
     }
     
     

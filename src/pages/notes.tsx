@@ -1,5 +1,7 @@
 // pages/notes.js
-import React from "react";
+import { AuthContext } from "@/context/AuthContext";
+import { useRouter } from "next/router";
+import React, { use, useEffect } from "react";
 
 const NoteCard = ({ title, content }: {title: string, content: string}) => {
   return (
@@ -11,6 +13,8 @@ const NoteCard = ({ title, content }: {title: string, content: string}) => {
 };
 
 export default function NotesPage() {
+    const context = React.useContext(AuthContext);
+    const router = useRouter();
   const notes = [
     {
       title: "FUCKED UP DAY",
@@ -27,11 +31,20 @@ As I sit here reflecting on this fucked up day, I remind myself that tomorrow is
     // Add more notes here if needed
   ];
 
+  useEffect(() => {
+    if (!context?.isAuthenticated) {
+      router.push('/');
+    }
+  }, [context]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 p-8">
       <header className="flex items-center justify-between mb-8">
         <h1 className="text-4xl font-extrabold text-purple-800">DIARY.</h1>
-        <button className="text-purple-600 hover:text-purple-800 font-medium underline">
+        <button 
+            onClick={context?.logout}
+            className="text-purple-600 hover:text-purple-800 font-medium underline"
+        >
           Logout
         </button>
       </header>

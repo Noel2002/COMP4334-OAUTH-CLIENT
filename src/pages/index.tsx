@@ -1,3 +1,6 @@
+import { AuthContext } from "@/context/AuthContext";
+import { useContext } from "react";
+
 const LoginPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600">
@@ -36,11 +39,27 @@ const providerDetails = {
 
 type Provider = 'Google' | 'OAuth2.0' | 'Twitter';
 
-const LoginButton = ({ provider }: {provider: Provider}) => {
+const LoginButton = ({ provider,...rest }: {provider: Provider}) => {
   const { logo, bgColor, textColor } = providerDetails[provider];
-
+  const context = useContext(AuthContext);
+  const handleLogin = async () => {
+    try {
+      switch (provider) {
+        case 'OAuth2.0':
+          context?.login();
+          break;
+      
+        default:
+          alert("Provider not implemented")
+      }
+    } catch (error) {
+      console.error("Login failed", error);
+    }
+  }
   return (
     <button
+      {...rest}
+      onClick={ handleLogin }
       className={`w-64 flex items-center justify-center py-3 px-6 rounded-full shadow-lg hover:opacity-90 transition-opacity duration-300 ${bgColor}`}
     >
       <img src={logo} className="w-6 h-6 mr-3" />

@@ -83,6 +83,7 @@ const AuthProvider = (props: AuthProviderProps) => {
         setUserName(null);
         localStorage.removeItem('access_token');
         localStorage.removeItem('id_token');
+        router.push('/');
     }
 
     const authenticate = async(code: string, state: string) => {
@@ -129,6 +130,7 @@ const AuthProvider = (props: AuthProviderProps) => {
         setIdToken(idToken);
         setIsAuthenticated(true);
         setUserName("usertest"); // TODO: get username from token
+        router.push('/notes');
         return true;
     }
 
@@ -137,6 +139,7 @@ const AuthProvider = (props: AuthProviderProps) => {
         const token = localStorage.getItem('access_token');
         if(token){
             setToken(token);
+            router.push('/notes');
         }
     }, [])
     return (

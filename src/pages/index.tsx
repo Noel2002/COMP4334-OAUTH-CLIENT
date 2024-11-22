@@ -1,5 +1,6 @@
 import { AuthContext } from "@/context/AuthContext";
-import { useContext } from "react";
+import { useRouter } from "next/router";
+import { use, useContext, useEffect } from "react";
 
 const LoginPage = () => {
   return (
@@ -40,8 +41,18 @@ const providerDetails = {
 type Provider = 'Google' | 'OAuth2.0' | 'Twitter';
 
 const LoginButton = ({ provider,...rest }: {provider: Provider}) => {
+  const router = useRouter();
   const { logo, bgColor, textColor } = providerDetails[provider];
   const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("AuthContext not found");
+  }
+
+  useEffect(() => {
+    if (context.isAuthenticated) {
+      router.push('/notes');
+    }
+  }, [context]);
   const handleLogin = async () => {
     try {
       switch (provider) {

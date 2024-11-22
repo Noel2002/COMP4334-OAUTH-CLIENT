@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React, { createContext, useEffect } from "react";
 import * as crypto from 'crypto';
+import axios from "axios";
 
 function dec2hex(dec: any) {
     return ("0" + dec.toString(16)).substr(-2);
@@ -44,6 +45,7 @@ export type AuthContextType = {
   login: () => void;
   logout: () => void;
   authenticate: (code: string, state: string) => Promise<boolean>;
+  user: User | null;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -51,11 +53,17 @@ const AuthContext = createContext<AuthContextType | null>(null);
 type AuthProviderProps = {
     children: React.ReactNode;
 }
+
+type User = {
+    username: string;
+    photo: string;
+}
+
 const AuthProvider = (props: AuthProviderProps) => {
     const [isAuthenticated, setIsAuthenticated] = React.useState(false);
     const [username, setUserName] = React.useState<string | null>(null);
     const [token, setToken] = React.useState<string | null>(null);
-    const [idToken, setIdToken] = React.useState<string | null>(null);
+    const [user, setUser] = React.useState<User | null>(null);
 
     const router = useRouter();
     
@@ -77,8 +85,8 @@ const AuthProvider = (props: AuthProviderProps) => {
     }
     
     const logout = ()=>{
+        setUser(null);
         setToken(null);
-        setIdToken(null);
         setIsAuthenticated(false);
         setUserName(null);
         localStorage.removeItem('access_token');
@@ -101,7 +109,7 @@ const AuthProvider = (props: AuthProviderProps) => {
             client_id,
             redirect_uri: `http://localhost:80/auth/callback`,
             code_verifier,
-            client_secret: "a920874398aa35dd77dc09679d6e096d"
+            // client_secret: "a920874398aa35dd77dc09679d6e096d"
         };
 
         console.log({body});
@@ -121,13 +129,18 @@ const AuthProvider = (props: AuthProviderProps) => {
         console.log({data});
         if(!token) return false;
 
+        const res = await fetch('/api/oauth/userInfo', {
+            headers: { 'authorization': `Bearer ${token}` }
+        });
+        const user = await res.json();
+        setUser(user);
+
         localStorage.setItem('access_token', token);
         localStorage.setItem('id_token', idToken);
         sessionStorage.removeItem('oauth_state');
         sessionStorage.removeItem('code_verifier');
 
         setToken(token);
-        setIdToken(idToken);
         setIsAuthenticated(true);
         setUserName("usertest"); // TODO: get username from token
         router.push('/notes');
@@ -136,14 +149,28 @@ const AuthProvider = (props: AuthProviderProps) => {
 
 
     useEffect(()=>{
+        const init = async(token: string) => {
+            try {
+                const response = await fetch('/api/oauth/userInfo', {
+                    headers: { 'authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                setUser(data);
+                setToken(token);
+                setIsAuthenticated(true);
+            } catch (error) {
+                console.error("Failed to authenticate user", error);
+            }
+        }
+
         const token = localStorage.getItem('access_token');
         if(token){
-            setToken(token);
-            router.push('/notes');
+            init(token);
         }
-    }, [])
+
+    }, []);
     return (
-        <AuthContext.Provider value={{login, logout, isAuthenticated, username, token, authenticate}}>
+        <AuthContext.Provider value={{login, logout, isAuthenticated, username, token, authenticate, user}}>
             {props.children}
         </AuthContext.Provider>
     )

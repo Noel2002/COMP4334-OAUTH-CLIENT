@@ -21,17 +21,17 @@ export default LoginPage;
 
 const providerDetails = {
   Google: {
-    logo: '/icons/google.svg',
+    logo: 'https://res.cloudinary.com/nowo-ltd/image/upload/v1732362240/TOKENTIX/Google_Icons-09-512_xxu69a.png',
     bgColor: 'bg-white',
     textColor: 'text-gray-800',
   },
   'OAuth2.0': {
-    logo: '/icons/oauth.svg',
+    logo: 'https://res.cloudinary.com/nowo-ltd/image/upload/v1732362429/TOKENTIX/1_St3fqJKbsSZD_eAhE5HtAw_anqw5c.png',
     bgColor: 'bg-gray-800',
     textColor: 'text-white',
   },
   Twitter: {
-    logo: '/icons/twitter.svg',
+    logo: 'https://res.cloudinary.com/nowo-ltd/image/upload/v1732362313/TOKENTIX/twitter-logo-2_srwnmo.svg',
     bgColor: 'bg-blue-500',
     textColor: 'text-white',
   },

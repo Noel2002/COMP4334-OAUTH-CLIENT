@@ -109,7 +109,6 @@ const AuthProvider = (props: AuthProviderProps) => {
             client_id,
             redirect_uri: `http://localhost:80/auth/callback`,
             code_verifier,
-            // client_secret: "a920874398aa35dd77dc09679d6e096d"
         };
 
         console.log({body});

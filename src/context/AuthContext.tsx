@@ -8,7 +8,7 @@ function dec2hex(dec: any) {
 }
   
 function generateCodeVerifier() {
-    var array = new Uint32Array(56 / 2);
+    var array = new Uint32Array(32);
     window.crypto.getRandomValues(array);
     return Array.from(array, dec2hex).join("");
 }
